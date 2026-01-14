@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ApiMovie } from "../service/api-movie.js";
 
 export default function InformationMovie({ movieId, onBack }) {
-
     const [details, setDetails] = useState(null);
     const [trailer, setTrailer] = useState(null);
     const [actors, setActors] = useState([]);
@@ -32,14 +31,13 @@ export default function InformationMovie({ movieId, onBack }) {
         <div>
             <button
                 onClick={onBack}
-                className="mb-4px-4 py-2text-sm text-white bg-black border border-white rounded hover:bg-gray-900"
+                className="mb-4 px-4 py-2 text-sm text-white bg-black rounded hover:bg-gray-900"
             >
                 Volver
             </button>
 
-
             <h2 className="text-xl font-bold mb-2">{details.title}</h2>
-            <p className="text-sm mb-2">
+            <p className="text-sm mb-3">
                 Año: {details.release_date?.split("-")[0]}
             </p>
 
@@ -52,7 +50,7 @@ export default function InformationMovie({ movieId, onBack }) {
                 />
             )}
 
-            <h3 className="font-semibold mb-2"> Actores</h3>
+            <h3 className="font-semibold mb-2">Actores</h3>
             <ul className="text-sm list-disc list-inside">
                 {actors.map(actor => (
                     <li key={actor.id}>{actor.name}</li>

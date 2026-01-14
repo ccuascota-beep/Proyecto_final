@@ -1,46 +1,29 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { ApiMovie } from "../service/api-movie.js";
-import { buildUrlImage } from "../utils/buildUrlImage.js";
-import { generateQr } from "../helper/generateQr.js";
-
+import {ApiMovie} from "../service/api-movie.js";
+import {buildUrlImage} from "../utils/buildUrlImage.js";
 import Modal from "../components/Modal.jsx";
 import SearchBar from "../components/SearchBar.jsx";
+import InformationMovie from "../components/InformationMovie.jsx";
+import {generateQr} from "../helper/generateQr.js";
 
 function Home() {
-    const navigate = useNavigate();
-
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState("");
-
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [qrBase64, setQrBase64] = useState(null);
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
 
-    // 🔹 Obtener películas populares
+    const [hoveredMovieId, setHoveredMovieId] = useState(null);
+    const [qrMap, setQrMap] = useState({});
+
     const fetchPopularMovies = async () => {
         const response = await ApiMovie.getPopularMovies();
         setMovies(response.results);
     };
 
-    // 🔹 Abrir modal con QR
-    const openQrModal = async (id) => {
-        const qrCode = await generateQr(id.toString());
-        setQrBase64(qrCode);
-        setIsOpenModal(true);
-    };
-
-    // 🔹 Ir a detalle de película
-    const openMovieDetail = (id) => {
-        navigate(`/movie/${id}`);
-    };
-
-    // 🔹 Cargar películas al iniciar
     useEffect(() => {
         fetchPopularMovies();
     }, []);
 
-    // 🔹 Búsqueda con delay
     useEffect(() => {
         const delay = setTimeout(async () => {
             if (search.trim() === "") {
@@ -54,88 +37,79 @@ function Home() {
         return () => clearTimeout(delay);
     }, [search]);
 
+    const handleMouseEnter = async (id) => {
+        setHoveredMovieId(id);
+
+        if (!qrMap[id]) {
+            const qr = await generateQr(id.toString());
+            setQrMap(prev => ({ ...prev, [id]: qr }));
+        }
+    };
+
     return (
         <>
-            {/* CONTENIDO PRINCIPAL */}
             <div className="min-h-screen bg-gradient-to-b from-white via-zinc-950 to-black px-6 py-10">
 
-                {/* BOTONES SUPERIORES */}
-                <div className="flex justify-center items-center gap-6 bg-black py-4 mb-8 rounded-xl">
-                    <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition">
+                <div className="flex justify-center gap-6 mb-8">
+                    <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
                         Historial
                     </button>
-                    <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition">
+                    <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
                         Favoritos
-                    </button>
-                    <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition">
-                        Perfil
                     </button>
                 </div>
 
-                {/* TÍTULO */}
                 <h1 className="text-4xl font-bold mb-6 text-white text-center">
-                    Películas Top ⭐⭐⭐
+                    🎬 Películas Top
                 </h1>
 
-                {/* BUSCADOR */}
                 <SearchBar value={search} onChange={setSearch} />
 
-                {/* CARTELERA */}
                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                    {movies.map((movie) => (
+                    {movies.map(movie => (
                         <li
                             key={movie.id}
-                            className="relative cursor-pointer group"
-                            onClick={() => openMovieDetail(movie.id)}
+                            className="relative group cursor-pointer"
+                            onMouseEnter={() => handleMouseEnter(movie.id)}
+                            onMouseLeave={() => setHoveredMovieId(null)}
+                            onClick={() => {
+                                setSelectedMovieId(movie.id);
+                                setIsOpenModal(true);
+                            }}
                         >
-                            {/* POSTER */}
                             <img
                                 src={buildUrlImage(movie.poster_path)}
                                 alt={movie.title}
                                 className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"
                             />
 
-                            {/* OVERLAY CON TÍTULO */}
-                            <div
-                                className="absolute inset-0 bg-black/70 rounded-xl
-                           flex items-end justify-center pb-6
-                           opacity-0 group-hover:opacity-100
-                           transition-all duration-300
-                           translate-y-4 group-hover:translate-y-0"
-                            >
-                                <p className="text-white text-center text-sm font-semibold px-3">
+                            <div className="absolute inset-0 bg-black/80 rounded-xl
+                                flex flex-col items-center justify-center
+                                opacity-0 group-hover:opacity-100
+                                transition-all duration-300">
+
+                                {hoveredMovieId === movie.id && qrMap[movie.id] && (
+                                    <img
+                                        src={qrMap[movie.id]}
+                                        alt="QR"
+                                        className="w-28 h-28 mb-3"
+                                    />
+                                )}
+
+                                <p className="text-white text-sm font-semibold text-center px-3">
                                     {movie.title}
                                 </p>
                             </div>
-
-                            {/* BOTÓN QR */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    openQrModal(movie.id);
-                                }}
-                                className="absolute top-2 right-2 bg-black/70 text-white text-xs px-3 py-1 rounded-lg hover:bg-black transition"
-                            >
-                                QR
-                            </button>
                         </li>
                     ))}
                 </ul>
             </div>
 
-            {/* MODAL QR */}
             <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
-                <h2 className="text-lg font-bold text-center mb-4">
-                    Código QR
-                </h2>
-
-                {qrBase64 && (
-                    <img
-                        src={qrBase64}
-                        alt="QR"
-                        className="mx-auto w-40 h-40 mb-4"
-                    />
-                )}
+                <InformationMovie
+                    movieId={selectedMovieId}
+                    onBack={() => setIsOpenModal(false)}
+                />
             </Modal>
         </>
     );

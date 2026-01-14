@@ -1,28 +1,14 @@
-import React from "react";
-
 export default function SearchBar({ value, onChange }) {
     return (
-        <div className="mb-8 max-w-md mx-auto bg-black">
+        <div className="mb-10 max-w-md mx-auto">
             <input
                 type="text"
                 placeholder="Buscar película..."
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="
-          w-full px-4 py-3
-          rounded-2xl
-          bg-white/90
-          border border-zinc-300
-          text-zinc-800
-          shadow-md
-          transition-all duration-300
-          hover:border-zinc-400
-          focus:outline-none
-          focus:ring-2
-          focus:ring-black
-          focus:border-black
-
-        "
+                className="w-full p-3 rounded-xl bg-white
+                border border-zinc-300 shadow-md
+                focus:outline-none focus:ring-2 focus:ring-black"
             />
         </div>
     );
