@@ -12,14 +12,14 @@ export class ApiMovie {
     static async searchMovies(query) {
         const response = await movieInstance.get("/search/movie", {
             params: {
-                language: "es-ES",
-                query
+                query,
+                language: "es-ES"
             }
         });
         return response.data;
     }
 
-    static async getMovieDetails(id) {
+    static async getMovieById(id) {
         const response = await movieInstance.get(`/movie/${id}`, {
             params: { language: "es-ES" }
         });
@@ -34,7 +34,9 @@ export class ApiMovie {
     }
 
     static async getMovieCredits(id) {
-        const response = await movieInstance.get(`/movie/${id}/credits`);
+        const response = await movieInstance.get(`/movie/${id}/credits`, {
+            params: { language: "es-ES" }
+        });
         return response.data;
     }
 }

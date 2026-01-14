@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
-import {ApiMovie} from "../service/api-movie.js";
-import {buildUrlImage} from "../utils/buildUrlImage.js";
+import { ApiMovie } from "../service/api-movie.js";
+import { buildUrlImage } from "../utils/buildUrlImage.js";
 import Modal from "../components/Modal.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import InformationMovie from "../components/InformationMovie.jsx";
-import {generateQr} from "../helper/generateQr.js";
+import { generateQr } from "../helper/generateQr.js";
+import { getFavorites, saveFavorites } from "../helper/favorites.js";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState("");
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState(null);
-
     const [hoveredMovieId, setHoveredMovieId] = useState(null);
     const [qrMap, setQrMap] = useState({});
+    const [favorites, setFavorites] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setFavorites(getFavorites());
+    }, []);
 
     const fetchPopularMovies = async () => {
         const response = await ApiMovie.getPopularMovies();
@@ -46,15 +54,28 @@ function Home() {
         }
     };
 
+    const handleToggleFavorite = (id) => {
+        let updated;
+
+        if (favorites.includes(id)) {
+            updated = favorites.filter(favId => favId !== id);
+        } else {
+            updated = [...favorites, id];
+        }
+
+        setFavorites(updated);
+        saveFavorites(updated);
+    };
+
     return (
         <>
-            <div className="min-h-screen bg-gradient-to-b from-white via-zinc-950 to-black px-6 py-10">
+            <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 px-6 py-10">
 
                 <div className="flex justify-center gap-6 mb-8">
-                    <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
-                        Historial
-                    </button>
-                    <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+                    <button
+                        onClick={() => navigate("/favorites")}
+                        className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+                    >
                         Favoritos
                     </button>
                 </div>
@@ -77,23 +98,34 @@ function Home() {
                                 setIsOpenModal(true);
                             }}
                         >
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleFavorite(movie.id);
+                                }}
+                                className="absolute top-2 right-2 z-30
+                                           bg-black/60 rounded-full px-2
+                                           text-2xl text-yellow-400"
+                            >
+                                {favorites.includes(movie.id) ? "⭐" : "☆"}
+                            </button>
+
                             <img
                                 src={buildUrlImage(movie.poster_path)}
                                 alt={movie.title}
-                                className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"
+                                className="rounded-xl shadow-lg
+                                           transition-transform duration-300
+                                           group-hover:scale-105"
                             />
 
-                            <div className="absolute inset-0 bg-black/80 rounded-xl
-                                flex flex-col items-center justify-center
-                                opacity-0 group-hover:opacity-100
-                                transition-all duration-300">
-
+                            <div className="absolute inset-0 z-20
+                                            bg-black/80 rounded-xl
+                                            flex flex-col items-center justify-center
+                                            opacity-0 group-hover:opacity-100
+                                            transition-all duration-300
+                                            pointer-events-none">
                                 {hoveredMovieId === movie.id && qrMap[movie.id] && (
-                                    <img
-                                        src={qrMap[movie.id]}
-                                        alt="QR"
-                                        className="w-28 h-28 mb-3"
-                                    />
+                                    <img src={qrMap[movie.id]} alt="QR" className="w-28 h-28 mb-3" />
                                 )}
 
                                 <p className="text-white text-sm font-semibold text-center px-3">

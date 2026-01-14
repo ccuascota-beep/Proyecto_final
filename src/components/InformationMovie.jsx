@@ -1,61 +1,139 @@
 import { useEffect, useState } from "react";
 import { ApiMovie } from "../service/api-movie.js";
+import { buildUrlImage } from "../utils/buildUrlImage.js";
 
-export default function InformationMovie({ movieId, onBack }) {
-    const [details, setDetails] = useState(null);
+function InformationMovie({ movieId, onBack }) {
+    const [movie, setMovie] = useState(null);
     const [trailer, setTrailer] = useState(null);
     const [actors, setActors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchInfo = async () => {
-            const movieDetails = await ApiMovie.getMovieDetails(movieId);
-            const videos = await ApiMovie.getMovieVideos(movieId);
-            const credits = await ApiMovie.getMovieCredits(movieId);
+        if (!movieId) return;
 
-            setDetails(movieDetails);
+        const loadData = async () => {
+            try {
+                setLoading(true);
 
-            const trailerVideo = videos.results.find(
-                v => v.type === "Trailer" && v.site === "YouTube"
-            );
-            setTrailer(trailerVideo);
+                const [movieData, videoData, creditsData] =
+                    await Promise.all([
+                        ApiMovie.getMovieById(movieId),
+                        ApiMovie.getMovieVideos(movieId),
+                        ApiMovie.getMovieCredits(movieId)
+                    ]);
 
-            setActors(credits.cast.slice(0, 5));
+                setMovie(movieData);
+
+                const yt = videoData.results.find(
+                    v => v.type === "Trailer" && v.site === "YouTube"
+                );
+                setTrailer(yt?.key || null);
+
+                setActors(creditsData.cast.slice(0, 12));
+            } catch (error) {
+                console.error("Error cargando información", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        fetchInfo();
+        loadData();
     }, [movieId]);
 
-    if (!details) return <p>Cargando información...</p>;
+    if (!movieId) return null;
+
+    if (loading) {
+        return (
+            <div className="text-white text-center py-10">
+                Cargando información...
+            </div>
+        );
+    }
 
     return (
-        <div>
+        <div className="text-white max-w-5xl mx-auto">
             <button
                 onClick={onBack}
-                className="mb-4 px-4 py-2 text-sm text-white bg-black rounded hover:bg-gray-900"
+                className="mb-4 px-4 py-2 bg-blue-600 rounded-lg"
             >
-                Volver
+                ⬅ Volver
             </button>
 
-            <h2 className="text-xl font-bold mb-2">{details.title}</h2>
-            <p className="text-sm mb-3">
-                Año: {details.release_date?.split("-")[0]}
-            </p>
-
-            {trailer && (
-                <iframe
-                    className="w-full h-56 mb-4 rounded-xl"
-                    src={`https://www.youtube.com/embed/${trailer.key}`}
-                    title="Trailer"
-                    allowFullScreen
+            {/* POSTER + INFO */}
+            <div className="flex flex-col md:flex-row gap-8">
+                <img
+                    src={buildUrlImage(movie.poster_path)}
+                    alt={movie.title}
+                    className="w-64 rounded-xl shadow-lg"
                 />
+
+                <div>
+                    <h2 className="text-3xl font-bold mb-2">
+                        {movie.title}
+                    </h2>
+
+                    <p className="text-gray-300 mb-2">
+                        📅 Año: {movie.release_date?.split("-")[0]}
+                    </p>
+
+                    <p className="text-gray-300 mb-2">
+                        🎭 Géneros: {movie.genres.map(g => g.name).join(", ")}
+                    </p>
+
+                    <p className="mt-4 text-sm leading-relaxed">
+                        {movie.overview}
+                    </p>
+                </div>
+            </div>
+
+            {/* TRAILER */}
+            {trailer && (
+                <div className="mt-8">
+                    <h3 className="text-2xl font-semibold mb-4">
+                        🎬 Trailer
+                    </h3>
+
+                    <div className="aspect-video">
+                        <iframe
+                            className="w-full h-full rounded-xl"
+                            src={`https://www.youtube.com/embed/${trailer}`}
+                            title="Trailer"
+                            allowFullScreen
+                        />
+                    </div>
+                </div>
             )}
 
-            <h3 className="font-semibold mb-2">Actores</h3>
-            <ul className="text-sm list-disc list-inside">
-                {actors.map(actor => (
-                    <li key={actor.id}>{actor.name}</li>
-                ))}
-            </ul>
+            {/* ACTORES */}
+            <div className="mt-8">
+                <h3 className="text-2xl font-semibold mb-4">
+                    🎭 Actores
+                </h3>
+
+                <div className="flex flex-wrap gap-6">
+                    {actors.map(actor => (
+                        <div
+                            key={actor.id}
+                            className="flex flex-col items-center w-24"
+                        >
+                            <img
+                                src={
+                                    actor.profile_path
+                                        ? buildUrlImage(actor.profile_path)
+                                        : "https://via.placeholder.com/150"
+                                }
+                                alt={actor.name}
+                                className="w-20 h-20 rounded-full object-cover mb-2"
+                            />
+                            <p className="text-xs text-center">
+                                {actor.name}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
+
+export default InformationMovie;

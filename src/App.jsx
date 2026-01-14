@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import MovieDetail from "./pages/MovieDetail.jsx";
+import Favorites from "./pages/Favorites.jsx";
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/favorites" element={<Favorites />} />
         </Routes>
     );
 }
