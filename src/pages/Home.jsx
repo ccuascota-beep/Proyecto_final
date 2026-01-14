@@ -80,9 +80,7 @@ function Home() {
                     </button>
                 </div>
 
-                <h1 className="text-4xl font-bold mb-6 text-white text-center">
-                    🎬 Películas Top
-                </h1>
+                <h1 className="text-4xl font-bold mb-6 text-white text-center">🎬 Películas Top</h1>
 
                 <SearchBar value={search} onChange={setSearch} />
 

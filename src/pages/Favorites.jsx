@@ -30,14 +30,10 @@ function Favorites() {
         <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 px-6 py-10">
             <button
                 onClick={() => navigate("/")}
-                className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg"
-            >
-                ⬅ Volver al Home
+                className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg">Volver
             </button>
 
-            <h1 className="text-4xl font-bold text-white text-center mb-8">
-                ⭐ Mis Favoritos
-            </h1>
+            <h1 className="text-4xl font-bold text-white text-center mb-8">Mis Favoritos</h1>
 
             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                 {movies.map(movie => (
@@ -46,9 +42,7 @@ function Favorites() {
                             onClick={() => removeFavorite(movie.id)}
                             className="absolute top-2 right-2 z-20
                                        bg-black/60 rounded-full px-2
-                                       text-2xl text-yellow-400"
-                        >
-                            ⭐
+                                       text-2xl text-yellow-400">⭐
                         </button>
 
                         <img

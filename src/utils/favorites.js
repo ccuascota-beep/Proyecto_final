@@ -34,9 +34,7 @@ function Favorites() {
     return (
         <>
             <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 px-6 py-10">
-                <h1 className="text-4xl font-bold mb-8 text-white text-center">
-                    ⭐ Mis Favoritos
-                </h1>
+                <h1 className="text-4xl font-bold mb-8 text-white text-center">Mis Favoritos</h1>
 
                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                     {movies.map(movie => (
