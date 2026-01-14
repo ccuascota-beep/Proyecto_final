@@ -2,7 +2,7 @@ import React from "react";
 
 export default function SearchBar({ value, onChange }) {
     return (
-        <div className="mb-8 max-w-md">
+        <div className="mb-8 max-w-md ">
             <input
                 type="text"
                 placeholder=" Buscar película..."
