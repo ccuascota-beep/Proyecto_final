@@ -88,7 +88,7 @@ function Home() {
 
                         <button
                             onClick={() => navigate("/historial")}
-                            className="px-5 py-2 bg-green-600 text-white rounded-xl hover:bg-yellow-700 transition font-semibold"
+                            className="px-5 py-2 bg-yellow-500 text-black rounded-xl hover:bg-yellow-400 transition font-semibold"
                         >
                             Historial
                         </button>
