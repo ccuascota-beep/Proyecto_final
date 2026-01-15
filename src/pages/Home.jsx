@@ -19,10 +19,12 @@ function Home() {
 
     const navigate = useNavigate();
 
+    // Cargar favoritos locales al iniciar
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
 
+    // Obtener películas populares
     const fetchPopularMovies = async () => {
         const response = await ApiMovie.getPopularMovies();
         setMovies(response.results);
@@ -32,6 +34,7 @@ function Home() {
         fetchPopularMovies();
     }, []);
 
+    // Búsqueda con retraso de 500ms
     useEffect(() => {
         const delay = setTimeout(async () => {
             if (search.trim() === "") {
@@ -45,6 +48,7 @@ function Home() {
         return () => clearTimeout(delay);
     }, [search]);
 
+    // Generar QR al pasar mouse
     const handleMouseEnter = async (id) => {
         setHoveredMovieId(id);
 
@@ -54,6 +58,7 @@ function Home() {
         }
     };
 
+    // Toggle favoritos
     const handleToggleFavorite = (id) => {
         let updated;
 
@@ -71,6 +76,7 @@ function Home() {
         <>
             <div className="min-h-screen bg-gradient-to-b from-black to-zinc-900 px-6 py-10">
 
+                {/* Botones Favoritos y Historial */}
                 <div className="flex justify-center gap-6 mb-8">
                     <button
                         onClick={() => navigate("/favorites")}
@@ -78,13 +84,22 @@ function Home() {
                     >
                         Favoritos
                     </button>
+
+                    <button
+                        onClick={() => navigate("/historial")}
+                        className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700"
+                    >
+                        Historial
+                    </button>
                 </div>
 
                 <h1 className="text-4xl font-bold mb-6 text-white text-center">🎬 Películas Top</h1>
 
+                {/* Barra de búsqueda */}
                 <SearchBar value={search} onChange={setSearch} />
 
-                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                {/* Grid de películas */}
+                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mt-6">
                     {movies.map(movie => (
                         <li
                             key={movie.id}
@@ -96,6 +111,7 @@ function Home() {
                                 setIsOpenModal(true);
                             }}
                         >
+                            {/* Botón favorito */}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -108,6 +124,7 @@ function Home() {
                                 {favorites.includes(movie.id) ? "⭐" : "☆"}
                             </button>
 
+                            {/* Poster */}
                             <img
                                 src={buildUrlImage(movie.poster_path)}
                                 alt={movie.title}
@@ -116,6 +133,7 @@ function Home() {
                                            group-hover:scale-105"
                             />
 
+                            {/* Overlay con QR y título */}
                             <div className="absolute inset-0 z-20
                                             bg-black/80 rounded-xl
                                             flex flex-col items-center justify-center
@@ -135,6 +153,7 @@ function Home() {
                 </ul>
             </div>
 
+            {/* Modal de información */}
             <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
                 <InformationMovie
                     movieId={selectedMovieId}
