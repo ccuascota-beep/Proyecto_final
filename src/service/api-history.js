@@ -2,7 +2,7 @@ import { supabase } from "../supabase/client";
 
 export const getHistory = async () => {
     const { data, error } = await supabase
-        .from("acam_logs")           // nombre correcto de la tabla
+        .from("acam_logs")
         .select("*")
         .order("created_at", { ascending: false });
 

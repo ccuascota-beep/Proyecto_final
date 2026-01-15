@@ -10,10 +10,8 @@ function Sidebar() {
                        bg-zinc-950 text-white
                        border-r border-white/10"
         >
-            {/* SCROLL INTERNO */}
             <div className="flex-1 overflow-y-auto px-6 py-8">
 
-                {/* LOGO → HOME */}
                 <h2
                     onClick={() => navigate("/")}
                     className="text-2xl font-extrabold mb-10 tracking-wide cursor-pointer hover:text-blue-400 transition"
@@ -21,7 +19,6 @@ function Sidebar() {
                     🎬 MovieApp
                 </h2>
 
-                {/* IDIOMAS */}
                 <div className="mb-10">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
                         Idiomas
@@ -36,7 +33,6 @@ function Sidebar() {
                     </ul>
                 </div>
 
-                {/* GÉNEROS (solo visual por ahora) */}
                 <div className="mb-10">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
                         Géneros
@@ -61,7 +57,6 @@ function Sidebar() {
                     </ul>
                 </div>
 
-                {/* PUNTUACIÓN (solo visual) */}
                 <div className="mb-10">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
                         Puntuación
@@ -75,7 +70,6 @@ function Sidebar() {
                     </ul>
                 </div>
 
-                {/* AÑO (solo visual) */}
                 <div className="mb-10">
                     <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
                         Año

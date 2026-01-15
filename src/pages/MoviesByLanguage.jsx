@@ -16,7 +16,6 @@ function MoviesByLanguage() {
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    // Modal + QR
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [hoveredMovieId, setHoveredMovieId] = useState(null);
@@ -44,7 +43,6 @@ function MoviesByLanguage() {
         fetchMovies();
     }, [lang, page]);
 
-    // QR
     const handleMouseEnter = async (id) => {
         setHoveredMovieId(id);
 
@@ -61,7 +59,6 @@ function MoviesByLanguage() {
 
                 <main className="flex-1 px-6 py-10">
 
-                    {/* HEADER */}
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl font-bold text-white">
                             Idioma: {lang.toUpperCase()}
@@ -69,13 +66,10 @@ function MoviesByLanguage() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
-                        >
-                            Home
+                            className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Home
                         </button>
                     </div>
 
-                    {/* GRID */}
                     {loading ? (
                         <p className="text-white text-center mt-20">
                             Cargando películas...
@@ -91,16 +85,12 @@ function MoviesByLanguage() {
                                     onClick={() => {
                                         setSelectedMovieId(movie.id);
                                         setIsOpenModal(true);
-                                    }}
-                                >
-                                    {/* POSTER */}
+                                    }}>
                                     <img
                                         src={buildUrlImage(movie.poster_path)}
                                         alt={movie.title}
-                                        className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"
-                                    />
+                                        className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"/>
 
-                                    {/* OVERLAY QR */}
                                     <div className="absolute inset-0 z-20
                                                     bg-black/80 rounded-xl
                                                     flex flex-col items-center justify-center
@@ -124,14 +114,11 @@ function MoviesByLanguage() {
                         </ul>
                     )}
 
-                    {/* PAGINACIÓN */}
                     <div className="flex justify-center items-center gap-6 mt-12">
                         <button
                             onClick={() => setPage(p => Math.max(p - 1, 1))}
                             disabled={page === 1}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition"
-                        >
-                            ⬅ Anterior
+                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">Atras
                         </button>
 
                         <span className="text-white text-sm">
@@ -141,15 +128,12 @@ function MoviesByLanguage() {
                         <button
                             onClick={() => setPage(p => p + 1)}
                             disabled={page >= totalPages}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition"
-                        >
-                            Siguiente ➡
+                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">Siguiente
                         </button>
                     </div>
                 </main>
             </div>
 
-            {/* MODAL */}
             <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
                 <InformationMovie
                     movieId={selectedMovieId}
