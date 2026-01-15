@@ -66,14 +66,12 @@ function MoviesByLanguage() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Home
+                            className="px-5 py-2 bg-yellow-500 text-black rounded-xl hover:bg-yellow-400 transition font-semibold">Home
                         </button>
                     </div>
 
                     {loading ? (
-                        <p className="text-white text-center mt-20">
-                            Cargando películas...
-                        </p>
+                        <p className="text-white text-center mt-20">Cargando películas...</p>
                     ) : (
                         <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                             {movies.map(movie => (
