@@ -14,6 +14,7 @@ export default function Historial() {
     const loadHistory = async () => {
         setLoading(true);
         const data = await getHistory();
+        console.log("Historial desde Supabase:", data); // para verificar
         setHistory(data);
         setLoading(false);
     };
@@ -36,11 +37,16 @@ export default function Historial() {
             ) : (
                 <ul className="space-y-2">
                     {history.map((item) => (
-                        <li key={item.id} className="p-2 bg-gray-800 rounded">
-                            <strong>{item.code}</strong>
-                            <span className="ml-2 text-gray-400">
-                {new Date(item.scanned_at).toLocaleString()}
-              </span>
+                        <li key={item.id} className="p-2 bg-gray-800 rounded flex flex-col sm:flex-row sm:justify-between">
+                            <div>
+                                <strong>QR:</strong> {item.raw_qr}
+                            </div>
+                            <div>
+                                <strong>Película ID:</strong> {item.movie_id || "N/A"}
+                            </div>
+                            <div className="text-gray-400">
+                                {new Date(item.created_at).toLocaleString()}
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -48,3 +54,4 @@ export default function Historial() {
         </div>
     );
 }
+
