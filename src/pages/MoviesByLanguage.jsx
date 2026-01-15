@@ -26,12 +26,9 @@ function MoviesByLanguage() {
             try {
                 setLoading(true);
 
-                const response = await ApiMovie.getPopularMovies(page);
-                const filtered = response.results.filter(
-                    movie => movie.original_language === lang
-                );
+                const response = await ApiMovie.getMoviesByLanguage(lang, page);
 
-                setMovies(filtered);
+                setMovies(response.results);
                 setTotalPages(response.total_pages);
             } catch (error) {
                 console.error("Error cargando películas", error);
@@ -66,12 +63,15 @@ function MoviesByLanguage() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 text-black rounded-xl hover:bg-yellow-400 transition font-semibold">Home
+                            className="px-5 py-2 bg-yellow-500 text-black rounded-xl hover:bg-yellow-400 transition font-semibold">
+                            Home
                         </button>
                     </div>
 
                     {loading ? (
-                        <p className="text-white text-center mt-20">Cargando películas...</p>
+                        <p className="text-white text-center mt-20">
+                            Cargando películas...
+                        </p>
                     ) : (
                         <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                             {movies.map(movie => (
@@ -84,17 +84,21 @@ function MoviesByLanguage() {
                                         setSelectedMovieId(movie.id);
                                         setIsOpenModal(true);
                                     }}>
+
                                     <img
                                         src={buildUrlImage(movie.poster_path)}
                                         alt={movie.title}
-                                        className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"/>
+                                        className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"
+                                    />
 
-                                    <div className="absolute inset-0 z-20
-                                                    bg-black/80 rounded-xl
-                                                    flex flex-col items-center justify-center
-                                                    opacity-0 group-hover:opacity-100
-                                                    transition-all duration-300
-                                                    pointer-events-none">
+                                    <div
+                                        className="absolute inset-0 z-20
+                                        bg-black/80 rounded-xl
+                                        flex flex-col items-center justify-center
+                                        opacity-0 group-hover:opacity-100
+                                        transition-all duration-300
+                                        pointer-events-none"
+                                    >
                                         {hoveredMovieId === movie.id && qrMap[movie.id] && (
                                             <img
                                                 src={qrMap[movie.id]}
@@ -112,11 +116,13 @@ function MoviesByLanguage() {
                         </ul>
                     )}
 
+                    {/* PAGINACIÓN */}
                     <div className="flex justify-center items-center gap-6 mt-12">
                         <button
                             onClick={() => setPage(p => Math.max(p - 1, 1))}
                             disabled={page === 1}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">Atras
+                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">
+                            Atrás
                         </button>
 
                         <span className="text-white text-sm">
@@ -126,9 +132,11 @@ function MoviesByLanguage() {
                         <button
                             onClick={() => setPage(p => p + 1)}
                             disabled={page >= totalPages}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">Siguiente
+                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40 hover:bg-zinc-600 transition">
+                            Siguiente
                         </button>
                     </div>
+
                 </main>
             </div>
 

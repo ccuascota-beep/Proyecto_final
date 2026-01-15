@@ -43,4 +43,16 @@ export class ApiMovie {
         });
         return response.data;
     }
+    static async getMoviesByLanguage(lang, page = 1) {
+        const response = await movieInstance.get("/discover/movie", {
+            params: {
+                with_original_language: lang,
+                page,
+                language: "es-ES"
+            }
+        });
+
+        return response.data;
+    }
+
 }
