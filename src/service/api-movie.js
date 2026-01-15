@@ -2,17 +2,21 @@ import { movieInstance } from "../https/api-movie.instance.js";
 
 export class ApiMovie {
 
-    static async getPopularMovies() {
+    static async getPopularMovies(page = 1, language = "es-ES") {
         const response = await movieInstance.get("/movie/popular", {
-            params: { language: "es-ES" }
+            params: {
+                page,
+                language
+            }
         });
         return response.data;
     }
 
-    static async searchMovies(query) {
+    static async searchMovies(query, page = 1) {
         const response = await movieInstance.get("/search/movie", {
             params: {
                 query,
+                page,
                 language: "es-ES"
             }
         });
