@@ -32,7 +32,47 @@ function Sidebar() {
                         <li onClick={() => navigate("/language/ko")} className="cursor-pointer hover:text-white text-gray-300">🇰🇷 Coreano</li>
                     </ul>
                 </div>
+
+                <div className="mb-10">
+                    <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
+                        Géneros
+                    </h3>
+
+                    <ul className="grid grid-cols-2 gap-2 text-sm text-gray-300">
+                        <li onClick={() => navigate("/genre/28/Acción")} className="hover:text-white cursor-pointer">Acción</li>
+
+                        <li onClick={() => navigate("/genre/12/Aventura")} className="hover:text-white cursor-pointer">Aventura</li>
+
+                        <li onClick={() => navigate("/genre/16/Animación")} className="hover:text-white cursor-pointer">Animación</li>
+
+                        <li onClick={() => navigate("/genre/35/Comedia")} className="hover:text-white cursor-pointer">Comedia</li>
+
+                        <li onClick={() => navigate("/genre/80/Crimen")} className="hover:text-white cursor-pointer">Crimen</li>
+
+                        <li onClick={() => navigate("/genre/99/Documental")} className="hover:text-white cursor-pointer">Documental</li>
+
+                        <li onClick={() => navigate("/genre/18/Drama")} className="hover:text-white cursor-pointer">Drama</li>
+
+                        <li onClick={() => navigate("/genre/14/Fantasía")} className="hover:text-white cursor-pointer">Fantasía</li>
+
+                        <li onClick={() => navigate("/genre/36/Historia")} className="hover:text-white cursor-pointer">Historia</li>
+
+                        <li onClick={() => navigate("/genre/9648/Misterio")} className="hover:text-white cursor-pointer">Misterio</li>
+
+                        <li onClick={() => navigate("/genre/53/Suspenso")} className="hover:text-white cursor-pointer">Suspenso</li>
+
+                        <li onClick={() => navigate("/genre/27/Terror")} className="hover:text-white cursor-pointer">Terror</li>
+
+                        <li onClick={() => navigate("/genre/878/Ciencia%20Ficción")} className="hover:text-white cursor-pointer">Sci-Fi</li>
+
+                        <li onClick={() => navigate("/genre/10749/Romance")} className="hover:text-white cursor-pointer">Romance</li>
+
+                    </ul>
+
+                </div>
+
             </div>
+
         </aside>
     );
 }
