@@ -58,7 +58,6 @@ function MoviesByGenre() {
         <>
             <div className="flex min-h-screen bg-black">
                 <Sidebar />
-
                 <main className="flex-1 px-6 py-10">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl font-bold text-white">Género: {genreName}
