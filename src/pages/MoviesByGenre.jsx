@@ -6,6 +6,12 @@ import Sidebar from "../components/Sidebar.jsx";
 import Modal from "../components/Modal.jsx";
 import InformationMovie from "../components/InformationMovie.jsx";
 import { generateQr } from "../helper/generateQr.js";
+import {
+    getFavorites,
+    saveFavorites,
+    toggleFavorite,
+    isFavorite
+} from "../helper/favorites.js";
 
 function MoviesByGenre() {
     const { genreId, genreName } = useParams();
@@ -14,43 +20,51 @@ function MoviesByGenre() {
     const [movies, setMovies] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(false);
 
-    const [isOpenModal, setIsOpenModal] = useState(false);
-    const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const [favorites, setFavorites] = useState([]);
     const [hoveredMovieId, setHoveredMovieId] = useState(null);
     const [qrMap, setQrMap] = useState({});
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const [isOpenModal, setIsOpenModal] = useState(false);
 
+    // cargar favoritos
     useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                setLoading(true);
+        setFavorites(getFavorites());
+    }, []);
 
-                const response = await ApiMovie.getMoviesByGenre(genreId, page);
-                setMovies(response.results);
-                setTotalPages(response.total_pages);
-            } catch (error) {
-                console.error("Error cargando películas por género", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    // reset página al cambiar género
+    useEffect(() => {
+        setPage(1);
+    }, [genreId]);
 
+    // cargar películas por género + página
+    useEffect(() => {
         fetchMovies();
     }, [genreId, page]);
 
+    const fetchMovies = async () => {
+        const response = await ApiMovie.getMoviesByGenre(genreId, page);
+        setMovies(response.results);
+        setTotalPages(response.total_pages);
+    };
+
     const handleMouseEnter = async (id) => {
         setHoveredMovieId(id);
-
         if (!qrMap[id]) {
             const qr = await generateQr(id.toString());
             setQrMap(prev => ({ ...prev, [id]: qr }));
         }
     };
 
+    const handleToggleFavorite = (movie) => {
+        const updated = toggleFavorite(favorites, movie);
+        setFavorites(updated);
+        saveFavorites(updated);
+    };
+
     return (
         <>
-            <div className="flex min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black">
+            <div className="flex min-h-screen bg-black">
                 <Sidebar />
 
                 <main className="flex-1 px-6 py-10">
@@ -61,64 +75,71 @@ function MoviesByGenre() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 text-black rounded-xl hover:bg-yellow-400 transition font-semibold">
+                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold"
+                        >
                             Home
                         </button>
                     </div>
 
-                    {loading ? (
-                        <p className="text-white text-center mt-20">Cargando películas...</p>
-                    ) : (
-                        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                            {movies.map(movie => (
-                                <li
-                                    key={movie.id}
-                                    className="relative group cursor-pointer"
-                                    onMouseEnter={() => handleMouseEnter(movie.id)}
-                                    onMouseLeave={() => setHoveredMovieId(null)}
-                                    onClick={() => {
-                                        setSelectedMovieId(movie.id);
-                                        setIsOpenModal(true);
-                                    }}>
-                                    <img
-                                        src={buildUrlImage(movie.poster_path)}
-                                        alt={movie.title}
-                                        className="rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105"/>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                        {movies.map(movie => (
+                            <li
+                                key={movie.id}
+                                className="relative group cursor-pointer"
+                                onMouseEnter={() => handleMouseEnter(movie.id)}
+                                onMouseLeave={() => setHoveredMovieId(null)}
+                                onClick={() => {
+                                    setSelectedMovieId(movie.id);
+                                    setIsOpenModal(true);
+                                }}
+                            >
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleToggleFavorite(movie);
+                                    }}
+                                    className="absolute top-2 right-2 z-30 bg-black/60 rounded-full px-2 text-2xl text-yellow-400"
+                                >
+                                    {isFavorite(favorites, movie.id) ? "⭐" : "☆"}
+                                </button>
 
-                                    <div className="absolute inset-0 z-20 bg-black/80 rounded-xl
-                                                    flex flex-col items-center justify-center
-                                                    opacity-0 group-hover:opacity-100
-                                                    transition-all duration-300
-                                                    pointer-events-none">
-                                        {hoveredMovieId === movie.id && qrMap[movie.id] && (
-                                            <img src={qrMap[movie.id]} alt="QR" className="w-28 h-28 mb-3"/>
-                                        )}
+                                <img
+                                    src={buildUrlImage(movie.poster_path)}
+                                    alt={movie.title}
+                                    className="rounded-xl shadow-lg group-hover:scale-105 transition"
+                                />
 
-                                        <p className="text-white text-sm font-semibold text-center px-3">
-                                            {movie.title}
-                                        </p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                                <div className="absolute inset-0 bg-black/80 rounded-xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition">
+                                    {hoveredMovieId === movie.id && qrMap[movie.id] && (
+                                        <img src={qrMap[movie.id]} className="w-28 mb-3" />
+                                    )}
+                                    <p className="text-white text-sm text-center font-semibold">
+                                        {movie.title}
+                                    </p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
 
-                    <div className="flex justify-center items-center gap-6 mt-12">
+                    {/* PAGINADO */}
+                    <div className="flex justify-center gap-4 mt-10 text-white">
                         <button
-                            onClick={() => setPage(p => Math.max(p - 1, 1))}
                             disabled={page === 1}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40">
+                            onClick={() => setPage(p => p - 1)}
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
+                        >
                             Atrás
                         </button>
 
-                        <span className="text-white text-sm">
-                            Página {page} de {totalPages}
+                        <span className="font-semibold">
+                            {page} / {totalPages}
                         </span>
 
                         <button
+                            disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            disabled={page >= totalPages}
-                            className="px-4 py-2 rounded-lg bg-zinc-700 text-white disabled:opacity-40">
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
+                        >
                             Siguiente
                         </button>
                     </div>
@@ -126,10 +147,7 @@ function MoviesByGenre() {
             </div>
 
             <Modal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}>
-                <InformationMovie
-                    movieId={selectedMovieId}
-                    onBack={() => setIsOpenModal(false)}
-                />
+                <InformationMovie movieId={selectedMovieId} />
             </Modal>
         </>
     );
