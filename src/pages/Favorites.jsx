@@ -41,15 +41,11 @@ function Favorites() {
 
                 <main className="flex-1 px-6 py-10">
                     <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-3xl text-white font-bold">
-                            ⭐ Mis Favoritos
-                        </h1>
+                        <h1 className="text-3xl text-white font-bold">⭐ Mis Favoritos</h1>
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold"
-                        >
-                            Volver
+                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold">Volver
                         </button>
                     </div>
 

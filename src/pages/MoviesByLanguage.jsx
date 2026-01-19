@@ -75,9 +75,7 @@ function MoviesByLanguage() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold"
-                        >
-                            Home
+                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold">Home
                         </button>
                     </div>
 
@@ -120,14 +118,11 @@ function MoviesByLanguage() {
                         ))}
                     </ul>
 
-                    {/* PAGINADO */}
                     <div className="flex justify-center gap-4 mt-10 text-white">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
-                        >
-                            Atrás
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Atrás
                         </button>
 
                         <span className="font-semibold">
@@ -137,9 +132,7 @@ function MoviesByLanguage() {
                         <button
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
-                        >
-                            Siguiente
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Siguiente
                         </button>
                     </div>
                 </main>

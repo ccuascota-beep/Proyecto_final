@@ -5,12 +5,7 @@ import Modal from "../components/Modal.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import InformationMovie from "../components/InformationMovie.jsx";
 import { generateQr } from "../helper/generateQr.js";
-import {
-    getFavorites,
-    saveFavorites,
-    toggleFavorite,
-    isFavorite
-} from "../helper/favorites.js";
+import {getFavorites, saveFavorites, toggleFavorite, isFavorite} from "../helper/favorites.js";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 
@@ -27,7 +22,6 @@ function Home() {
 
     const navigate = useNavigate();
 
-    // 🔹 Cargar favoritos desde localStorage
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
@@ -72,20 +66,15 @@ function Home() {
                 <main className="flex-1 px-6 py-10">
                     <SearchBar value={search} onChange={setSearch} />
 
-                    {/* BOTONES HISTORIAL Y FAVORITOS */}
                     <div className="flex justify-end gap-4 mb-6">
                         <button
                             onClick={() => navigate("/historial")}
-                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition"
-                        >
-                            Historial
+                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition">Historial
                         </button>
 
                         <button
                             onClick={() => navigate("/favoritos")}
-                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition"
-                        >
-                            Favoritos ({favorites.length})
+                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition">Favoritos ({favorites.length})
                         </button>
                     </div>
 
@@ -128,7 +117,6 @@ function Home() {
                         ))}
                     </ul>
 
-                    {/* PAGINADO */}
                     <div className="flex justify-center gap-4 mt-10">
                         <button
                             disabled={page === 1}

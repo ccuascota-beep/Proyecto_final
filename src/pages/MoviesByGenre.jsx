@@ -6,12 +6,7 @@ import Sidebar from "../components/Sidebar.jsx";
 import Modal from "../components/Modal.jsx";
 import InformationMovie from "../components/InformationMovie.jsx";
 import { generateQr } from "../helper/generateQr.js";
-import {
-    getFavorites,
-    saveFavorites,
-    toggleFavorite,
-    isFavorite
-} from "../helper/favorites.js";
+import {getFavorites, saveFavorites, toggleFavorite, isFavorite} from "../helper/favorites.js";
 
 function MoviesByGenre() {
     const { genreId, genreName } = useParams();
@@ -27,17 +22,14 @@ function MoviesByGenre() {
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [isOpenModal, setIsOpenModal] = useState(false);
 
-    // cargar favoritos
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
 
-    // reset página al cambiar género
     useEffect(() => {
         setPage(1);
     }, [genreId]);
 
-    // cargar películas por género + página
     useEffect(() => {
         fetchMovies();
     }, [genreId, page]);
@@ -69,15 +61,12 @@ function MoviesByGenre() {
 
                 <main className="flex-1 px-6 py-10">
                     <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-3xl font-bold text-white">
-                            Género: {genreName}
+                        <h1 className="text-3xl font-bold text-white">Género: {genreName}
                         </h1>
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold"
-                        >
-                            Home
+                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold">Home
                         </button>
                     </div>
 
@@ -121,14 +110,11 @@ function MoviesByGenre() {
                         ))}
                     </ul>
 
-                    {/* PAGINADO */}
                     <div className="flex justify-center gap-4 mt-10 text-white">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
-                        >
-                            Atrás
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Atrás
                         </button>
 
                         <span className="font-semibold">
@@ -138,9 +124,7 @@ function MoviesByGenre() {
                         <button
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40"
-                        >
-                            Siguiente
+                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Siguiente
                         </button>
                     </div>
                 </main>
