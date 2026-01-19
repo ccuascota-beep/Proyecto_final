@@ -9,7 +9,6 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            {/* Cambiado de /favorites a /favoritos */}
             <Route path="/favoritos" element={<Favorites />} />
             <Route path="/historial" element={<Historial />} />
             <Route path="/language/:lang" element={<MoviesByLanguage />} />
