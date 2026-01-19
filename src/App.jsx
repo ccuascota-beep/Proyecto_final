@@ -9,7 +9,8 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
+            {/* Cambiado de /favorites a /favoritos */}
+            <Route path="/favoritos" element={<Favorites />} />
             <Route path="/historial" element={<Historial />} />
             <Route path="/language/:lang" element={<MoviesByLanguage />} />
             <Route path="/genre/:genreId/:genreName" element={<MoviesByGenre />} />

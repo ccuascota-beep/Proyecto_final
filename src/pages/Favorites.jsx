@@ -9,31 +9,25 @@ import { getFavorites, saveFavorites, toggleFavorite, isFavorite } from "../help
 
 function Favorites() {
     const navigate = useNavigate();
-
     const [favorites, setFavorites] = useState([]);
     const [hoveredMovieId, setHoveredMovieId] = useState(null);
     const [qrMap, setQrMap] = useState({});
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [isOpenModal, setIsOpenModal] = useState(false);
 
-    // 🔹 cargar favoritos desde localStorage
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
 
-    // 🔹 generar QR (PROTEGIDO contra undefined)
     const handleMouseEnter = async (id) => {
-        if (!id) return; // 👈 evita el error toString
-
+        if (!id) return;
         setHoveredMovieId(id);
-
         if (!qrMap[id]) {
             const qr = await generateQr(id.toString());
             setQrMap(prev => ({ ...prev, [id]: qr }));
         }
     };
 
-    // 🔹 quitar de favoritos (misma lógica que Home)
     const handleToggleFavorite = (movie) => {
         const updated = toggleFavorite(favorites, movie);
         setFavorites(updated);
@@ -53,7 +47,8 @@ function Favorites() {
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold">
+                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold"
+                        >
                             Volver
                         </button>
                     </div>
@@ -75,7 +70,6 @@ function Favorites() {
                                         setIsOpenModal(true);
                                     }}
                                 >
-                                    {/* ⭐ estrella */}
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -92,11 +86,7 @@ function Favorites() {
                                         className="rounded-xl shadow-lg group-hover:scale-105 transition"
                                     />
 
-                                    {/* overlay */}
-                                    <div className="absolute inset-0 bg-black/80 rounded-xl
-                                        opacity-0 group-hover:opacity-100 flex flex-col
-                                        items-center justify-center transition">
-
+                                    <div className="absolute inset-0 bg-black/80 rounded-xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition">
                                         {hoveredMovieId === fav.id && qrMap[fav.id] && (
                                             <img
                                                 src={qrMap[fav.id]}

@@ -17,10 +17,8 @@ import Sidebar from "../components/Sidebar.jsx";
 function Home() {
     const [movies, setMovies] = useState([]);
     const [search, setSearch] = useState("");
-
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
     const [favorites, setFavorites] = useState([]);
     const [hoveredMovieId, setHoveredMovieId] = useState(null);
     const [qrMap, setQrMap] = useState({});
@@ -29,6 +27,7 @@ function Home() {
 
     const navigate = useNavigate();
 
+    // 🔹 Cargar favoritos desde localStorage
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
@@ -72,6 +71,23 @@ function Home() {
 
                 <main className="flex-1 px-6 py-10">
                     <SearchBar value={search} onChange={setSearch} />
+
+                    {/* BOTONES HISTORIAL Y FAVORITOS */}
+                    <div className="flex justify-end gap-4 mb-6">
+                        <button
+                            onClick={() => navigate("/historial")}
+                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition"
+                        >
+                            Historial
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/favoritos")}
+                            className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-600 transition"
+                        >
+                            Favoritos ({favorites.length})
+                        </button>
+                    </div>
 
                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mt-8">
                         {movies.map(movie => (
