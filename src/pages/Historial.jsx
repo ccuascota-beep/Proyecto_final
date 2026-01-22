@@ -23,7 +23,9 @@ export default function Historial() {
         <div className="text-white max-w-4xl mx-auto p-4">
             <button
                 className="mb-4 px-4 py-2 bg-gray-600 rounded hover:bg-gray-700"
-                onClick={() => navigate("/")}>Home
+                onClick={() => navigate("/")}
+            >
+                Home
             </button>
 
             <h1 className="text-3xl font-bold mb-4">Historial de QR</h1>
@@ -31,13 +33,16 @@ export default function Historial() {
             {loading ? (
                 <p>Cargando...</p>
             ) : history.length === 0 ? (
-                <p className="text-black">No hay escaneos todavía.</p>
+                <p className="text-white">No hay escaneos todavía.</p>
             ) : (
                 <ul className="space-y-2">
                     {history.map((item) => (
-                        <li key={item.id} className="p-2 bg-gray-800 rounded flex flex-col sm:flex-row sm:justify-between">
+                        <li
+                            key={item.id}
+                            className="p-2 bg-gray-800 rounded flex flex-col sm:flex-row sm:justify-between"
+                        >
                             <div>
-                                <strong>QR:</strong> {item.raw_qr}
+                                <strong>QR:</strong> {item.source}
                             </div>
                             <div>
                                 <strong>Película ID:</strong> {item.movie_id || "N/A"}
@@ -52,4 +57,3 @@ export default function Historial() {
         </div>
     );
 }
-

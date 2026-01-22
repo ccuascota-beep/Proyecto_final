@@ -60,7 +60,6 @@ function InformationMovie({ movieId, onBack }) {
             </button>
 
             <div className="flex flex-col md:flex-row gap-10">
-                {/* POSTER */}
                 <div className="w-72 flex-shrink-0 mx-auto md:mx-0">
                     <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-xl bg-black">
                         <img
@@ -85,12 +84,10 @@ function InformationMovie({ movieId, onBack }) {
                         Géneros: {movie.genres.map(g => g.name).join(", ")}
                     </p>
 
-                    {/* DESCRIPCIÓN */}
                     <p className="mt-4 text-sm leading-relaxed text-gray-200">
                         {movie.overview}
                     </p>
 
-                    {/* ACTORES DEBAJO DE LA DESCRIPCIÓN */}
                     {actors.length > 0 && (
                         <div className="mt-6">
                             <h3 className="text-xl font-semibold mb-3">
@@ -124,7 +121,6 @@ function InformationMovie({ movieId, onBack }) {
                 </div>
             </div>
 
-            {/* TRAILER */}
             {trailer && (
                 <div className="mt-10">
                     <h3 className="text-2xl font-semibold mb-4">

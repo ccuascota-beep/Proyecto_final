@@ -1,15 +1,15 @@
-import { supabase } from "../supabase/client";
+import {supabase} from "../supabase/client.js";
 
-export const getHistory = async () => {
+export async function getHistory() {
     const { data, error } = await supabase
-        .from("scam_logs")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('scan_logs')
+        .select('*')
+        .order('created_at', { ascending: false });
 
     if (error) {
-        console.error("Error cargando historial:", error);
+        console.error('Error cargando historial:', error);
         return [];
     }
 
     return data;
-};
+}
