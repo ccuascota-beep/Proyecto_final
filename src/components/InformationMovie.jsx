@@ -70,7 +70,6 @@ function InformationMovie({ movieId, onBack }) {
                     </div>
                 </div>
 
-                {/* INFO */}
                 <div className="flex-1">
                     <h2 className="text-3xl font-bold mb-2">
                         {movie.title}

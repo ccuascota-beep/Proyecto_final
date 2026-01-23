@@ -19,11 +19,7 @@ export const toggleFavorite = (favorites, movie) => {
 
     return [
         ...favorites,
-        {
-            id: movie.id,
-            title: movie.title,
-            poster_path: movie.poster_path
-        }
+        {id: movie.id, title: movie.title, poster_path: movie.poster_path}
     ];
 };
 
