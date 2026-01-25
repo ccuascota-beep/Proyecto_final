@@ -69,8 +69,7 @@ function MoviesByGenre() {
                         <button
                             onClick={() => navigate("/")}
                             className="px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 hover:text-white transition-all active:scale-95 flex items-center gap-2 w-fit"
-                        >
-                            <span>🏠</span> Volver al Home
+                        >Home
                         </button>
                     </div>
 

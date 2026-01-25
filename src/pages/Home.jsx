@@ -63,38 +63,46 @@ function Home() {
             <div className="flex min-h-screen bg-[#0c0c0e] text-black">
                 <Sidebar />
 
-                <main className="flex-1 px-6 py-10 max-w-[1600px] mx-auto">
-                    <div className="mb-8 max-w-2xl">
-                        <SearchBar value={search} onChange={setSearch} />
+                <main className="flex-1 px-8 py-10 max-w-[1600px] mx-auto">
+
+                    {/* --- HEADER PRINCIPAL --- */}
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-14">
+
+                        {/* BLOQUE IZQUIERDO: Título + Buscador */}
+                        <div className="flex flex-col gap-6 w-full max-w-xl">
+                            <h1 className="text-5xl font-black tracking-tighter text-white">
+                                Popcorn <span className="text-yellow-500">3</span>
+                            </h1>
+
+                            <div className="w-full">
+                                <SearchBar value={search} onChange={setSearch} />
+                            </div>
+                        </div>
+
+                        {/* BLOQUE DERECHO: Acciones */}
+                        <div className="flex gap-3 flex-shrink-0">
+                            <button
+                                onClick={() => navigate("/historial")}
+                                className="px-5 py-2.5 rounded-xl bg-zinc-900/50 text-zinc-400 border border-zinc-800/50 hover:text-white hover:bg-zinc-800 transition-all text-sm font-semibold"
+                            >
+                                Historial
+                            </button>
+
+                            <button
+                                onClick={() => navigate("/favoritos")}
+                                className="px-5 py-2.5 rounded-xl bg-zinc-900/50 text-zinc-400 border border-zinc-800/50 hover:text-yellow-500 hover:bg-zinc-800 transition-all text-sm font-semibold flex items-center gap-2"
+                            >
+                                <span>★</span> Favoritos ({favorites.length})
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="flex justify-end gap-4 mb-10">
-                        <button
-                            onClick={() => navigate("/historial")}
-                            className="px-6 py-2 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 transition-all active:scale-95"
-                        >
-                            Historial
-                        </button>
-
-                        <button
-                            onClick={() => navigate("/favoritos")}
-                            className="px-6 py-2 rounded-xl bg-yellow-500 text-black font-bold shadow-lg shadow-yellow-500/10 hover:bg-yellow-400 hover:scale-105 transition-all active:scale-95"
-                        >
-                            Favoritos ({favorites.length})
-                        </button>
-                    </div>
-
+                    {/* --- GRID DE PELÍCULAS --- */}
                     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
                         {movies.map(movie => (
                             <li
                                 key={movie.id}
-                                className="
-                                  relative group cursor-pointer rounded-2xl overflow-hidden
-                                  bg-zinc-900 border border-zinc-800/50
-                                  transition-all duration-500 ease-out
-                                  hover:-translate-y-3 hover:border-yellow-500/50
-                                  hover:shadow-[0_30px_60px_rgba(0,0,0,0.8)]
-                                "
+                                className="relative group cursor-pointer rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/50 transition-all duration-500 ease-out hover:-translate-y-3 hover:border-yellow-500/50 hover:shadow-[0_30px_60px_rgba(0,0,0,0.8)]"
                                 onMouseEnter={() => handleMouseEnter(movie.id)}
                                 onMouseLeave={() => setHoveredMovieId(null)}
                                 onClick={() => {
@@ -107,7 +115,7 @@ function Home() {
                                         e.stopPropagation();
                                         handleToggleFavorite(movie);
                                     }}
-                                    className="absolute top-4 right-4 z-30 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-yellow-500 hover:text-black shadow-2xl"
+                                    className="absolute top-4 right-4 z-30 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-yellow-500 hover:text-black shadow-2xl text-yellow-500"
                                 >
                                     {isFavorite(favorites, movie.id) ? "★" : "☆"}
                                 </button>
@@ -120,44 +128,41 @@ function Home() {
                                     />
                                 </div>
 
-                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/90 to-transparent pt-20 pb-6 px-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/95 to-transparent pt-24 pb-6 px-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 text-center">
                                     {hoveredMovieId === movie.id && qrMap[movie.id] && (
-                                        <div className="flex justify-center mb-4">
-                                            <div className="p-2 bg-white rounded-xl shadow-2xl transform scale-110">
-                                                <img src={qrMap[movie.id]} className="w-20 h-20" alt="QR" />
+                                        <div className="flex justify-center mb-4 scale-90">
+                                            <div className="p-2 bg-white rounded-lg shadow-2xl">
+                                                <img src={qrMap[movie.id]} className="w-16 h-16" alt="QR" />
                                             </div>
                                         </div>
                                     )}
-                                    <p className="text-white text-base text-center font-bold drop-shadow-lg">
+                                    <p className="text-white text-sm font-bold tracking-tight">
                                         {movie.title}
                                     </p>
-                                </div>
-
-                                <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                                    <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] group-hover:left-[150%] transition-all duration-1000"></div>
                                 </div>
                             </li>
                         ))}
                     </ul>
 
+                    {/* --- PAGINACIÓN --- */}
                     <div className="flex justify-center items-center gap-8 mt-20 pb-10">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="w-14 h-14 flex items-center justify-center rounded-full bg-zinc-800 text-white border border-zinc-700 transition-all hover:bg-zinc-700 disabled:opacity-20 active:scale-90"
+                            className="w-12 h-12 flex items-center justify-center rounded-full bg-zinc-900 text-white border border-zinc-800 transition-all hover:bg-zinc-800 disabled:opacity-10"
                         >
                             ←
                         </button>
 
                         <div className="text-center">
-                            <span className="block text-zinc-500 text-[10px] uppercase tracking-widest mb-1">Página</span>
-                            <span className="text-white font-bold text-2xl">{page} <span className="text-zinc-700 mx-1">/</span> {totalPages}</span>
+                            <span className="text-zinc-500 font-bold text-sm tracking-widest uppercase text-[10px] block mb-1">Página</span>
+                            <span className="text-white font-black text-xl">{page} / {totalPages}</span>
                         </div>
 
                         <button
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="w-14 h-14 flex items-center justify-center rounded-full bg-yellow-500 text-black shadow-lg shadow-yellow-500/20 font-bold transition-all hover:bg-yellow-400 disabled:opacity-20 active:scale-90"
+                            className="w-12 h-12 flex items-center justify-center rounded-full bg-yellow-500 text-black font-bold transition-all hover:bg-yellow-400 disabled:opacity-10 shadow-lg shadow-yellow-500/10"
                         >
                             →
                         </button>

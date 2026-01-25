@@ -60,7 +60,6 @@ function MoviesByLanguage() {
                 <Sidebar />
 
                 <main className="flex-1 px-6 py-10 max-w-[1600px] mx-auto">
-                    {/* Header optimizado */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
                         <h1 className="text-4xl font-extrabold text-white tracking-tight">
                             Idioma <span className="text-zinc-500 mx-2">/</span>
@@ -70,8 +69,7 @@ function MoviesByLanguage() {
                         <button
                             onClick={() => navigate("/")}
                             className="px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 hover:text-white transition-all active:scale-95 flex items-center gap-2 w-fit shadow-lg"
-                        >
-                            <span>🏠</span> Home
+                        >Home
                         </button>
                     </div>
 

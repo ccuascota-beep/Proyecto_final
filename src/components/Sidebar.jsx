@@ -1,76 +1,94 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Sidebar() {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const isActive = (path) => location.pathname === path;
 
     return (
         <aside
             className="hidden lg:flex flex-col
-                       w-72 min-h-screen
-                       bg-zinc-950 text-white
-                       border-r border-white/10"
+                       w-64 min-h-screen
+                       bg-[#0c0c0e] text-zinc-100
+                       border-r border-zinc-800/40 sticky top-0"
         >
-            <div className="flex-1 overflow-y-auto px-6 py-8">
+            <div className="flex-1 overflow-y-auto px-8 py-10 custom-scrollbar">
 
+                {/* Título Menú Simple */}
                 <h2
                     onClick={() => navigate("/")}
-                    className="text-2xl font-extrabold mb-10 tracking-wide cursor-pointer hover:text-blue-400 transition">Menu
+                    className="text-lg font-medium mb-12 tracking-[0.2em] uppercase text-white cursor-pointer hover:text-yellow-500 transition-colors"
+                >
+                    Menú
                 </h2>
 
-                <div className="mb-10">
-                    <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
+                {/* SECCIÓN IDIOMAS */}
+                <div className="mb-12">
+                    <h3 className="text-[10px] uppercase tracking-[0.3em] text-zinc-600 mb-6 font-bold">
                         Idiomas
                     </h3>
 
-                    <ul className="space-y-2 text-sm">
-                        <li onClick={() => navigate("/language/en")} className="cursor-pointer hover:text-white text-gray-300">🇺🇸 Inglés</li>
-                        <li onClick={() => navigate("/language/es")} className="cursor-pointer hover:text-white text-gray-300">🇪🇸 Español</li>
-                        <li onClick={() => navigate("/language/fr")} className="cursor-pointer hover:text-white text-gray-300">🇫🇷 Francés</li>
-                        <li onClick={() => navigate("/language/ja")} className="cursor-pointer hover:text-white text-gray-300">🇯🇵 Japonés</li>
-                        <li onClick={() => navigate("/language/ko")} className="cursor-pointer hover:text-white text-gray-300">🇰🇷 Coreano</li>
+                    <ul className="space-y-1">
+                        {[
+                            { code: "en", label: "Inglés", flag: "🇺🇸" },
+                            { code: "es", label: "Español", flag: "🇪🇸" },
+                            { code: "fr", label: "Francés", flag: "🇫🇷" },
+                            { code: "ja", label: "Japonés", flag: "🇯🇵" },
+                            { code: "ko", label: "Coreano", flag: "🇰🇷" },
+                        ].map((lang) => (
+                            <li
+                                key={lang.code}
+                                onClick={() => navigate(`/language/${lang.code}`)}
+                                className={`
+                                    flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200
+                                    ${isActive(`/language/${lang.code}`)
+                                    ? "text-yellow-500 font-semibold bg-yellow-500/5"
+                                    : "text-zinc-500 hover:text-zinc-200"
+                                }
+                                `}
+                            >
+                                <span className="text-base grayscale-[0.5]">{lang.flag}</span>
+                                <span className="text-sm">{lang.label}</span>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
+                {/* SECCIÓN GÉNEROS */}
                 <div className="mb-10">
-                    <h3 className="text-xs uppercase tracking-widest text-gray-400 mb-4">
+                    <h3 className="text-[10px] uppercase tracking-[0.3em] text-zinc-600 mb-6 font-bold">
                         Géneros
                     </h3>
 
-                    <ul className="grid grid-cols-2 gap-2 text-sm text-gray-300">
-                        <li onClick={() => navigate("/genre/28/Acción")} className="hover:text-white cursor-pointer">Acción</li>
-
-                        <li onClick={() => navigate("/genre/12/Aventura")} className="hover:text-white cursor-pointer">Aventura</li>
-
-                        <li onClick={() => navigate("/genre/16/Animación")} className="hover:text-white cursor-pointer">Animación</li>
-
-                        <li onClick={() => navigate("/genre/35/Comedia")} className="hover:text-white cursor-pointer">Comedia</li>
-
-                        <li onClick={() => navigate("/genre/80/Crimen")} className="hover:text-white cursor-pointer">Crimen</li>
-
-                        <li onClick={() => navigate("/genre/99/Documental")} className="hover:text-white cursor-pointer">Documental</li>
-
-                        <li onClick={() => navigate("/genre/18/Drama")} className="hover:text-white cursor-pointer">Drama</li>
-
-                        <li onClick={() => navigate("/genre/14/Fantasía")} className="hover:text-white cursor-pointer">Fantasía</li>
-
-                        <li onClick={() => navigate("/genre/36/Historia")} className="hover:text-white cursor-pointer">Historia</li>
-
-                        <li onClick={() => navigate("/genre/9648/Misterio")} className="hover:text-white cursor-pointer">Misterio</li>
-
-                        <li onClick={() => navigate("/genre/53/Suspenso")} className="hover:text-white cursor-pointer">Suspenso</li>
-
-                        <li onClick={() => navigate("/genre/27/Terror")} className="hover:text-white cursor-pointer">Terror</li>
-
-                        <li onClick={() => navigate("/genre/878/Ciencia%20Ficción")} className="hover:text-white cursor-pointer">Sci-Fi</li>
-
-                        <li onClick={() => navigate("/genre/10749/Romance")} className="hover:text-white cursor-pointer">Romance</li>
-
+                    <ul className="flex flex-col gap-1">
+                        {[
+                            { id: 28, name: "Acción" },
+                            { id: 12, name: "Aventura" },
+                            { id: 16, name: "Animación" },
+                            { id: 35, name: "Comedia" },
+                            { id: 80, name: "Crimen" },
+                            { id: 18, name: "Drama" },
+                            { id: 27, name: "Terror" },
+                            { id: 878, name: "Sci-Fi" },
+                        ].map((genre) => (
+                            <li
+                                key={genre.id}
+                                onClick={() => navigate(`/genre/${genre.id}/${genre.name}`)}
+                                className={`
+                                    px-3 py-1.5 rounded-lg text-sm cursor-pointer transition-all duration-200
+                                    ${isActive(`/genre/${genre.id}/${genre.name}`)
+                                    ? "text-yellow-500 font-semibold"
+                                    : "text-zinc-500 hover:text-zinc-200"
+                                }
+                                `}
+                            >
+                                {genre.name}
+                            </li>
+                        ))}
                     </ul>
-
                 </div>
-
             </div>
-
         </aside>
     );
 }

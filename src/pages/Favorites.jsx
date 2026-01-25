@@ -51,8 +51,7 @@ function Favorites() {
                         <button
                             onClick={() => navigate("/")}
                             className="px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 hover:text-white transition-all active:scale-95 flex items-center gap-2 w-fit shadow-lg"
-                        >
-                            <span>🏠</span> Volver
+                        >Volver
                         </button>
                     </div>
 
@@ -61,14 +60,7 @@ function Favorites() {
                             <div className="text-6xl mb-4 opacity-20">⭐</div>
                             <h2 className="text-2xl font-semibold text-zinc-500">Tu lista está vacía</h2>
                             <p className="text-zinc-600 mt-2 max-w-xs">
-                                Explora la cartelera y guarda tus películas favoritas para verlas aquí.
                             </p>
-                            <button
-                                onClick={() => navigate("/")}
-                                className="mt-8 px-8 py-3 bg-yellow-500 text-black font-bold rounded-full hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/10"
-                            >
-                                Explorar Películas
-                            </button>
                         </div>
                     ) : (
                         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
