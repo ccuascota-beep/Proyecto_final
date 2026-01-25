@@ -14,9 +14,7 @@ function Sidebar() {
 
                 <h2
                     onClick={() => navigate("/")}
-                    className="text-2xl font-extrabold mb-10 tracking-wide cursor-pointer hover:text-blue-400 transition"
-                >
-                    🎬 MovieApp
+                    className="text-2xl font-extrabold mb-10 tracking-wide cursor-pointer hover:text-blue-400 transition">Menu
                 </h2>
 
                 <div className="mb-10">

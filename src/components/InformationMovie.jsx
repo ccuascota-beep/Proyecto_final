@@ -2,136 +2,117 @@ import { useEffect, useState } from "react";
 import { ApiMovie } from "../service/api-movie.js";
 import { buildUrlImage } from "../utils/buildUrlImage.js";
 
-function InformationMovie({ movieId, onBack }) {
+function InformationMovie({ movieId }) {
     const [movie, setMovie] = useState(null);
     const [trailer, setTrailer] = useState(null);
     const [actors, setActors] = useState([]);
+    const [director, setDirector] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!movieId) return;
-
         const loadData = async () => {
             try {
                 setLoading(true);
-
-                const [movieData, videoData, creditsData] =
-                    await Promise.all([
-                        ApiMovie.getMovieById(movieId),
-                        ApiMovie.getMovieVideos(movieId),
-                        ApiMovie.getMovieCredits(movieId)
-                    ]);
+                const [movieData, videoData, creditsData] = await Promise.all([
+                    ApiMovie.getMovieById(movieId),
+                    ApiMovie.getMovieVideos(movieId),
+                    ApiMovie.getMovieCredits(movieId)
+                ]);
 
                 setMovie(movieData);
 
-                const yt = videoData.results.find(
-                    v => v.type === "Trailer" && v.site === "YouTube"
-                );
+                const movieDirector = creditsData.crew.find(person => person.job === "Director");
+                setDirector(movieDirector ? movieDirector.name : "No disponible");
+
+                const yt = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
                 setTrailer(yt?.key || null);
 
                 setActors(creditsData.cast.slice(0, 12));
-            } catch (error) {
-                console.error("Error cargando información", error);
             } finally {
                 setLoading(false);
             }
         };
-
         loadData();
     }, [movieId]);
 
-    if (!movieId) return null;
-
-    if (loading) {
-        return (
-            <div className="text-white text-center py-10">
-                Cargando información...
-            </div>
-        );
-    }
+    if (!movieId || loading) return <div className="p-20 text-center text-zinc-500 italic">Cargando detalles cinematográficos...</div>;
 
     return (
-        <div className="text-white max-w-6xl mx-auto">
-            <button
-                onClick={onBack}
-                className="mb-6 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700"
-            >
-                Volver
-            </button>
+        <div className="bg-[#0c0c0e] text-white rounded-3xl overflow-hidden max-w-6xl mx-auto shadow-2xl border border-zinc-800/50 animate-in fade-in duration-500">
 
-            <div className="flex flex-col md:flex-row gap-10">
-                <div className="w-72 flex-shrink-0 mx-auto md:mx-0">
-                    <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-xl bg-black">
-                        <img
-                            src={buildUrlImage(movie.poster_path)}
-                            alt={movie.title}
-                            className="w-full h-full object-contain"
-                        />
+            <div className="relative p-8 md:p-12 flex flex-col md:flex-row gap-12 bg-gradient-to-b from-zinc-900/20 to-transparent">
+
+                <div className="w-full md:w-64 flex-shrink-0">
+                    <div className="rounded-2xl overflow-hidden shadow-2xl border border-zinc-700/20">
+                        <img src={buildUrlImage(movie.poster_path)} alt={movie.title} className="w-full h-auto" />
                     </div>
                 </div>
 
-                <div className="flex-1">
-                    <h2 className="text-3xl font-bold mb-2">
-                        {movie.title}
-                    </h2>
+                <div className="flex-1 flex flex-col justify-center">
+                    <h1 className="text-4xl font-black mb-2 tracking-tight">
+                        {movie.title} <span className="text-zinc-600 font-light">({movie.release_date?.split("-")[0]})</span>
+                    </h1>
 
-                    <p className="text-gray-300 mb-1">
-                        Año: {movie.release_date?.split("-")[0]}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 mb-6 font-medium uppercase tracking-wider">
+                        <span>{movie.release_date}</span>
+                        <span>•</span>
+                        <span>{movie.genres.map(g => g.name).join(", ")}</span>
+                        <span>•</span>
+                        <span>{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</span>
+                    </div>
 
-                    <p className="text-gray-300 mb-3">
-                        Géneros: {movie.genres.map(g => g.name).join(", ")}
-                    </p>
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-14 h-14 rounded-full border-[3px] border-green-500 flex items-center justify-center bg-black">
+                            <span className="text-lg font-black text-green-400">{Math.round(movie.vote_average * 10)}%</span>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 leading-tight">Puntuación <br/> de usuarios</span>
+                    </div>
 
-                    <p className="mt-4 text-sm leading-relaxed text-gray-200">
-                        {movie.overview}
-                    </p>
+                    <h3 className="text-sm font-bold mb-2 text-zinc-400 uppercase tracking-widest">Vista general</h3>
+                    <p className="text-zinc-300 leading-relaxed text-sm mb-8 max-w-3xl font-light">{movie.overview}</p>
 
-                    {actors.length > 0 && (
-                        <div className="mt-6">
-                            <h3 className="text-xl font-semibold mb-3">
-                                Reparto
-                            </h3>
+                    <div>
+                        <p className="font-bold text-white text-base tracking-tight">{director}</p>
+                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-semibold">Director</p>
+                    </div>
+                </div>
+            </div>
 
-                            <div className="flex flex-wrap gap-5">
-                                {actors.map(actor => (
-                                    <div
-                                        key={actor.id}
-                                        className="flex flex-col items-center w-20"
-                                    >
-                                        <img
-                                            src={
-                                                actor.profile_path
-                                                    ? buildUrlImage(actor.profile_path, "w185")
-                                                    : "https://via.placeholder.com/150"
-                                            }
-                                            alt={actor.name}
-                                            className="w-16 h-16 rounded-full object-cover mb-2
-                                                       border border-white/20"
-                                        />
-                                        <p className="text-[11px] text-center text-gray-300 leading-tight">
-                                            {actor.name}
-                                        </p>
-                                    </div>
-                                ))}
+            <div className="px-8 md:px-12 py-10 bg-[#0c0c0e] border-t border-zinc-900/50">
+                <h3 className="text-xs font-bold mb-8 uppercase tracking-[0.3em] text-zinc-500">Reparto principal</h3>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-y-8 gap-x-4">
+                    {actors.map(actor => (
+                        <div key={actor.id} className="group flex flex-col items-center text-center">
+                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-lg border border-zinc-800 transition-all duration-300 group-hover:border-zinc-600 group-hover:-translate-y-1">
+                                <img
+                                    src={actor.profile_path ? buildUrlImage(actor.profile_path, "w185") : "https://via.placeholder.com/150x150?text=N/A"}
+                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                    alt={actor.name}
+                                />
+                            </div>
+                            <div className="mt-3 w-full">
+                                <p className="font-bold text-[11px] leading-tight text-zinc-200 group-hover:text-white transition-colors truncate">
+                                    {actor.name}
+                                </p>
+                                <p className="text-[9px] text-zinc-500 leading-tight mt-1 truncate italic">
+                                    {actor.character}
+                                </p>
                             </div>
                         </div>
-                    )}
+                    ))}
                 </div>
             </div>
 
             {trailer && (
-                <div className="mt-10">
-                    <h3 className="text-2xl font-semibold mb-4">
-                        Trailer
-                    </h3>
-
-                    <div className="w-full max-w-3xl mx-auto">
-                        <div className="relative aspect-video rounded-xl overflow-hidden shadow-lg">
+                <div className="bg-black border-t border-zinc-900 p-10 md:p-14">
+                    <div className="max-w-4xl mx-auto">
+                        <h3 className="text-center text-zinc-600 uppercase tracking-[0.5em] text-[9px] mb-10 font-bold">Multimedia / Tráiler Oficial</h3>
+                        <div className="relative aspect-video rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.7)] border border-zinc-800">
                             <iframe
                                 className="absolute inset-0 w-full h-full"
-                                src={`https://www.youtube.com/embed/${trailer}`}
-                                title="Trailer"
+                                src={`https://www.youtube.com/embed/${trailer}?rel=0&modestbranding=1`}
                                 allowFullScreen
                             />
                         </div>

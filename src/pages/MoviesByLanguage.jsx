@@ -6,12 +6,7 @@ import Sidebar from "../components/Sidebar.jsx";
 import Modal from "../components/Modal.jsx";
 import InformationMovie from "../components/InformationMovie.jsx";
 import { generateQr } from "../helper/generateQr.js";
-import {
-    getFavorites,
-    saveFavorites,
-    toggleFavorite,
-    isFavorite
-} from "../helper/favorites.js";
+import { getFavorites, saveFavorites, toggleFavorite, isFavorite } from "../helper/favorites.js";
 
 function MoviesByLanguage() {
     const { lang } = useParams();
@@ -27,17 +22,14 @@ function MoviesByLanguage() {
     const [selectedMovieId, setSelectedMovieId] = useState(null);
     const [isOpenModal, setIsOpenModal] = useState(false);
 
-    // cargar favoritos
     useEffect(() => {
         setFavorites(getFavorites());
     }, []);
 
-    // reset page cuando cambia idioma
     useEffect(() => {
         setPage(1);
     }, [lang]);
 
-    // cargar películas por idioma + página
     useEffect(() => {
         fetchMovies();
     }, [lang, page]);
@@ -64,26 +56,36 @@ function MoviesByLanguage() {
 
     return (
         <>
-            <div className="flex min-h-screen bg-black">
+            <div className="flex min-h-screen bg-[#0c0c0e] text-zinc-100">
                 <Sidebar />
 
-                <main className="flex-1 px-6 py-10">
-                    <div className="flex justify-between mb-8">
-                        <h1 className="text-3xl text-white font-bold">
-                            Idioma: {lang.toUpperCase()}
+                <main className="flex-1 px-6 py-10 max-w-[1600px] mx-auto">
+                    {/* Header optimizado */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
+                        <h1 className="text-4xl font-extrabold text-white tracking-tight">
+                            Idioma <span className="text-zinc-500 mx-2">/</span>
+                            <span className="text-yellow-500 uppercase"> {lang}</span>
                         </h1>
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-5 py-2 bg-yellow-500 rounded-xl font-semibold">Home
+                            className="px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 hover:text-white transition-all active:scale-95 flex items-center gap-2 w-fit shadow-lg"
+                        >
+                            <span>🏠</span> Home
                         </button>
                     </div>
 
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
                         {movies.map(movie => (
                             <li
                                 key={movie.id}
-                                className="relative group cursor-pointer"
+                                className="
+                                  relative group cursor-pointer rounded-2xl overflow-hidden
+                                  bg-zinc-900 border border-zinc-800/50
+                                  transition-all duration-500 ease-out
+                                  hover:-translate-y-3 hover:border-yellow-500/50
+                                  hover:shadow-[0_30px_60px_rgba(0,0,0,0.8)]
+                                "
                                 onMouseEnter={() => handleMouseEnter(movie.id)}
                                 onMouseLeave={() => setHoveredMovieId(null)}
                                 onClick={() => {
@@ -96,43 +98,62 @@ function MoviesByLanguage() {
                                         e.stopPropagation();
                                         handleToggleFavorite(movie);
                                     }}
-                                    className="absolute top-2 right-2 z-30 bg-black/60 rounded-full px-2 text-2xl text-yellow-400"
+                                    className="absolute top-4 right-4 z-30 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-yellow-500 hover:text-black shadow-2xl"
                                 >
-                                    {isFavorite(favorites, movie.id) ? "⭐" : "☆"}
+                                    {isFavorite(favorites, movie.id) ? "★" : "☆"}
                                 </button>
 
-                                <img
-                                    src={buildUrlImage(movie.poster_path)}
-                                    className="rounded-xl shadow-lg group-hover:scale-105 transition"
-                                />
+                                <div className="aspect-[2/3] w-full overflow-hidden bg-zinc-800">
+                                    <img
+                                        src={buildUrlImage(movie.poster_path)}
+                                        alt={movie.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        loading="lazy"
+                                    />
+                                </div>
 
-                                <div className="absolute inset-0 bg-black/80 rounded-xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition">
+                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/90 to-transparent pt-20 pb-6 px-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                                     {hoveredMovieId === movie.id && qrMap[movie.id] && (
-                                        <img src={qrMap[movie.id]} className="w-28 mb-3" />
+                                        <div className="flex justify-center mb-4">
+                                            <div className="p-2 bg-white rounded-xl shadow-2xl transform scale-110">
+                                                <img src={qrMap[movie.id]} className="w-18 h-18" alt="QR" />
+                                            </div>
+                                        </div>
                                     )}
-                                    <p className="text-white text-sm text-center font-semibold">
+                                    <p className="text-white text-base text-center font-bold drop-shadow-lg leading-tight">
                                         {movie.title}
                                     </p>
+                                </div>
+
+                                <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                                    <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] group-hover:left-[150%] transition-all duration-1000"></div>
                                 </div>
                             </li>
                         ))}
                     </ul>
 
-                    <div className="flex justify-center gap-4 mt-10 text-white">
+                    <div className="flex justify-center items-center gap-8 mt-20 pb-10">
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Atrás
+                            className="w-14 h-14 flex items-center justify-center rounded-full bg-zinc-800 text-white border border-zinc-700 transition-all hover:bg-zinc-700 disabled:opacity-20 active:scale-90 shadow-xl"
+                        >
+                            ←
                         </button>
 
-                        <span className="font-semibold">
-                            {page} / {totalPages}
-                        </span>
+                        <div className="text-center min-w-[100px]">
+                            <span className="block text-zinc-500 text-[10px] uppercase tracking-[0.3em] mb-1 font-medium">Página</span>
+                            <span className="text-white font-bold text-2xl">
+                                {page} <span className="text-zinc-700 mx-1">/</span> {totalPages}
+                            </span>
+                        </div>
 
                         <button
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="px-4 py-2 bg-yellow-500 rounded disabled:opacity-40">Siguiente
+                            className="w-14 h-14 flex items-center justify-center rounded-full bg-yellow-500 text-black shadow-lg shadow-yellow-500/20 font-bold transition-all hover:bg-yellow-400 disabled:opacity-20 active:scale-90"
+                        >
+                            →
                         </button>
                     </div>
                 </main>
