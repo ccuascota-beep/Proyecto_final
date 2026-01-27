@@ -36,44 +36,47 @@ function Favorites() {
 
     return (
         <>
-            <div className="flex min-h-screen bg-[#0c0c0e] text-zinc-100">
+            <div className="flex min-h-screen bg-[#08080a] text-zinc-100">
                 <Sidebar />
 
-                <main className="flex-1 px-6 py-10 max-w-[1600px] mx-auto">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
-                        <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                            Mis <span className="text-yellow-500">Favoritos</span>
-                            <span className="ml-4 text-zinc-600 font-medium text-lg tracking-normal">
-                                {favorites.length} {favorites.length === 1 ? 'película' : 'películas'}
-                            </span>
-                        </h1>
+                <main className="flex-1 px-4 md:px-10 py-12 max-w-[1600px] mx-auto">
+
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
+                        <div>
+                            <h1 className="text-5xl font-black text-white tracking-tighter">
+                                Mis <span className="text-yellow-500">Favoritos</span>
+                                <span className="ml-4 text-zinc-700 font-medium text-xl tracking-normal">
+                                    {favorites.length}
+                                </span>
+                            </h1>
+                        </div>
 
                         <button
                             onClick={() => navigate("/")}
-                            className="px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 border border-zinc-700/50 hover:bg-zinc-700 hover:text-white transition-all active:scale-95 flex items-center gap-2 w-fit shadow-lg"
-                        >Volver
+                            className="px-6 py-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-600 hover:text-white transition-all font-bold text-sm flex items-center gap-2 w-fit shadow-xl"
+                        >
+                            <span>Home</span>
                         </button>
                     </div>
 
                     {favorites.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center mt-32 text-center">
-                            <div className="text-6xl mb-4 opacity-20">⭐</div>
-                            <h2 className="text-2xl font-semibold text-zinc-500">Tu lista está vacía</h2>
-                            <p className="text-zinc-600 mt-2 max-w-xs">
+                        <div className="flex flex-col items-center justify-center py-32 text-center border-2 border-dashed border-zinc-900 rounded-3xl">
+                            <h2 className="text-2xl font-bold text-zinc-400">Aún no tienes favoritos</h2>
+                            <p className="text-zinc-600 mt-2 max-w-xs mx-auto">
+                                Las películas que marques con una estrella aparecerán aquí.
                             </p>
+                            <button
+                                onClick={() => navigate("/")}
+                                className="mt-8 text-yellow-500 font-bold hover:underline"
+                            >Ir a la cartelera
+                            </button>
                         </div>
                     ) : (
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
+                        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10">
                             {favorites.map(fav => (
                                 <li
                                     key={fav.id}
-                                    className="
-                                      relative group cursor-pointer rounded-2xl overflow-hidden
-                                      bg-zinc-900 border border-zinc-800/50
-                                      transition-all duration-500 ease-out
-                                      hover:-translate-y-3 hover:border-yellow-500/50
-                                      hover:shadow-[0_30px_60px_rgba(0,0,0,0.8)]
-                                    "
+                                    className="group cursor-pointer"
                                     onMouseEnter={() => handleMouseEnter(fav.id)}
                                     onMouseLeave={() => setHoveredMovieId(null)}
                                     onClick={() => {
@@ -81,39 +84,49 @@ function Favorites() {
                                         setIsOpenModal(true);
                                     }}
                                 >
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleToggleFavorite(fav);
-                                        }}
-                                        className="absolute top-4 right-4 z-30 bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-3 text-yellow-500 transition-all duration-300 hover:bg-yellow-500 hover:text-black shadow-2xl"
-                                    >
-                                        ★
-                                    </button>
+                                    <div className="relative aspect-[2/3] rounded-2xl overflow-hidden bg-zinc-900 mb-4 transition-all duration-500 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] group-hover:-translate-y-2 ring-1 ring-white/5">
 
-                                    <div className="aspect-[2/3] w-full overflow-hidden bg-zinc-800">
+                                        {fav.vote_average && (
+                                            <div className="absolute top-3 left-3 z-20 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
+                                                <span className="text-yellow-500 font-bold text-xs">
+                                                    {fav.vote_average.toFixed(1)}
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleToggleFavorite(fav);
+                                            }}
+                                            className="absolute top-3 right-3 z-20 p-2 rounded-xl transition-all duration-300 shadow-xl bg-yellow-500 text-black scale-110 hover:bg-red-500 hover:text-white group/btn"
+                                        >
+                                            <span className="group-hover/btn:hidden">★</span>
+                                            <span className="hidden group-hover/btn:block text-xs font-bold">✕</span>
+                                        </button>
+
                                         <img
                                             src={buildUrlImage(fav.poster_path)}
                                             alt={fav.title}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                    </div>
 
-                                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/90 to-transparent pt-20 pb-6 px-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                        {hoveredMovieId === fav.id && qrMap[fav.id] && (
-                                            <div className="flex justify-center mb-4">
-                                                <div className="p-2 bg-white rounded-xl shadow-2xl transform scale-110">
-                                                    <img src={qrMap[fav.id]} className="w-18 h-18" alt="QR" />
+                                        <div className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            {hoveredMovieId === fav.id && qrMap[fav.id] && (
+                                                <div className="p-3 bg-white rounded-xl transform scale-75 lg:scale-90">
+                                                    <img src={qrMap[fav.id]} className="w-20 h-20" alt="QR" />
                                                 </div>
-                                            </div>
-                                        )}
-                                        <p className="text-white text-base text-center font-bold drop-shadow-lg leading-tight">
-                                            {fav.title}
-                                        </p>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                                        <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg] group-hover:left-[150%] transition-all duration-1000"></div>
+                                    <div className="px-1">
+                                        <h3 className="text-white font-semibold text-sm line-clamp-1 group-hover:text-yellow-500 transition-colors">
+                                            {fav.title}
+                                        </h3>
+                                        <p className="text-zinc-500 text-xs font-medium mt-1 uppercase tracking-wider">
+                                            {fav.release_date ? fav.release_date.split("-")[0] : "S/F"}
+                                        </p>
                                     </div>
                                 </li>
                             ))}
