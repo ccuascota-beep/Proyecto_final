@@ -10,13 +10,13 @@ function Sidebar() {
         <aside
             className="hidden lg:flex flex-col
                        w-64 min-h-screen
-                       bg-white text-black
-                       border-r border-zinc-800/50 sticky top-0"
+                       bg-black text-white
+                       border-r border-zinc-500 sticky top-0"
         >
             <div className="flex-1 overflow-y-auto px-6 py-12 custom-scrollbar">
 
                 <div className="px-3 mb-10">
-                    <h2 className="text-2xl font-black tracking-tighter text-black italic">
+                    <h2 className="text-2xl font-black tracking-tighter text-white italic">
                         Menu
                     </h2>
                     <div className="h-1 w-8 bg-yellow-500 rounded-full mt-2"></div>
@@ -25,7 +25,7 @@ function Sidebar() {
                 <nav className="space-y-10">
 
                     <div>
-                        <h3 className="px-3 text-[10px] uppercase tracking-[0.25em] text-zinc-500 mb-6 font-black">
+                        <h3 className="px-3 text-[10px] uppercase tracking-[0.25em] text-zinc-400 mb-6 font-black">
                             Idiomas
                         </h3>
 
@@ -60,10 +60,10 @@ function Sidebar() {
                         </ul>
                     </div>
 
-                    <div className="border-t border-zinc-800/60 mx-3"></div>
+                    <div className="border-t border-zinc-500 mx-0"></div>
 
                     <div>
-                        <h3 className="px-3 text-[10px] uppercase tracking-[0.25em] text-zinc-500 mb-6 font-black">
+                        <h3 className="px-3 text-[10px] uppercase tracking-[0.25em] text-zinc-400 mb-6 font-black">
                             Géneros
                         </h3>
 
@@ -100,14 +100,6 @@ function Sidebar() {
                 </nav>
             </div>
 
-            <div className="p-6 border-t border-zinc-800/50">
-                <button
-                    onClick={() => navigate("/")}
-                    className="w-full py-3 rounded-xl bg-zinc-900 text-zinc-400 text-xs font-bold hover:text-white transition-colors"
-                >
-                    Inicio
-                </button>
-            </div>
         </aside>
     );
 }

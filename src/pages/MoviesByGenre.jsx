@@ -140,13 +140,12 @@ function MoviesByGenre() {
                         <button
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="group flex items-center gap-2 text-zinc-500 hover:text-black disabled:opacity-20 transition-all font-bold"
-                        >
-                            <span className="text-2xl">←</span> Anterior
+                            className="group flex items-center gap-2 text-zinc-500 hover:text-yellow-500 disabled:opacity-20 transition-all font-bold"
+                        >Anterior
                         </button>
 
                         <div className="flex flex-col items-center">
-                            <span className="text-black text-lg font-black">{page}</span>
+                            <span className="text-white text-lg font-black">{page}</span>
                             <div className="h-1 w-8 bg-yellow-500 rounded-full mt-1"></div>
                         </div>
 
@@ -154,8 +153,7 @@ function MoviesByGenre() {
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
                             className="group flex items-center gap-2 text-zinc-500 hover:text-yellow-500 disabled:opacity-20 transition-all font-bold"
-                        >
-                            Siguiente <span className="text-2xl">→</span>
+                        >Siguiente
                         </button>
                     </div>
                 </main>
