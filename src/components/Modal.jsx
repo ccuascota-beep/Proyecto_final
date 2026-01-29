@@ -32,8 +32,7 @@ export default function Modal({ isOpen, onClose, children, trailerKey }) {
                         text-3xl font-bold
                         transition-all
                     "
-                >
-                    ✕
+                >✕
                 </button>
 
                 {children}

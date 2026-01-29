@@ -60,7 +60,7 @@ function Home() {
 
     return (
         <>
-            <div className="flex min-h-screen bg-[#08080a] text-zinc-100">
+            <div className="flex min-h-screen bg-[#08080a] text-zinc-500">
                 <Sidebar />
 
                 <main className="flex-1 px-4 md:px-10 py-12 max-w-[1600px] mx-auto">
@@ -82,6 +82,7 @@ function Home() {
                             >Historial
                             </button>
                             <button
+                                onClick={() => navigate("/series")}
                                 className="px-6 py-3 rounded-2xl bg-yellow-500 text-black hover:bg-yellow-400 transition-all text-sm font-bold flex items-center gap-2 shadow-lg shadow-yellow-500/20"
                             >Series
                             </button>

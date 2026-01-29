@@ -49,4 +49,41 @@ export class ApiMovie {
         });
         return response.data;
     }
+    static async getPopularSeries(page = 1, language = "es-ES") {
+        const response = await movieInstance.get("/tv/popular", {
+            params: { page, language }
+        });
+        return response.data;
+    }
+    static async getSerieById(id) {
+        const response = await movieInstance.get(`/tv/${id}`, {
+            params: { language: "es-ES" }
+        });
+        return response.data;
+    }
+
+    static async getSerieVideos(id) {
+        const response = await movieInstance.get(`/tv/${id}/videos`, {
+            params: { language: "es-ES" }
+        });
+        return response.data;
+    }
+
+    static async getSerieCredits(id) {
+        const response = await movieInstance.get(`/tv/${id}/credits`, {
+            params: { language: "es-ES" }
+        });
+        return response.data;
+    }
+
+    static async getSeriesByGenre(genreId, page = 1) {
+        const response = await movieInstance.get("/discover/tv", {
+            params: {
+                with_genres: genreId,
+                page,
+                language: "es-ES"
+            }
+        });
+        return response.data;
+    }
 }

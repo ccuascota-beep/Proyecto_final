@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getHistory } from "../service/api-history";
+import { ApiMovie } from "../service/api-movie";
+import { buildUrlImage } from "../utils/buildUrlImage";
 
 export default function Historial() {
     const [history, setHistory] = useState([]);
@@ -13,47 +15,91 @@ export default function Historial() {
 
     const loadHistory = async () => {
         setLoading(true);
+
         const data = await getHistory();
-        console.log("Historial desde Supabase:", data);
-        setHistory(data);
+
+        const enriched = await Promise.all(
+            data.map(async (item) => {
+                if (!item.movie_id) return item;
+
+                try {
+                    const movie = await ApiMovie.getMovieById(item.movie_id);
+                    return {
+                        ...item,
+                        title: movie.title,
+                        overview: movie.overview,
+                        poster: movie.poster_path,
+                    };
+                } catch {
+                    return item;
+                }
+            })
+        );
+
+        setHistory(enriched);
         setLoading(false);
     };
 
     return (
-        <div className="text-white max-w-4xl mx-auto p-4">
-            <button
-                className="mb-4 px-4 py-2 bg-gray-600 rounded hover:bg-gray-700"
-                onClick={() => navigate("/")}
-            >
-                Home
-            </button>
+        <div className="min-h-screen bg-black text-white px-4 py-12">
+            <div className="max-w-5xl mx-auto">
 
-            <h1 className="text-3xl font-bold mb-4">Historial de QR</h1>
+                <div className="flex justify-between items-center mb-12">
+                    <h1 className="text-4xl font-black tracking-tight">
+                        Historial de Escaneos
+                    </h1>
 
-            {loading ? (
-                <p>Cargando...</p>
-            ) : history.length === 0 ? (
-                <p className="text-white">No hay escaneos todavía.</p>
-            ) : (
-                <ul className="space-y-2">
-                    {history.map((item) => (
-                        <li
-                            key={item.id}
-                            className="p-2 bg-gray-800 rounded flex flex-col sm:flex-row sm:justify-between"
-                        >
-                            <div>
-                                <strong>QR:</strong> {item.source}
-                            </div>
-                            <div>
-                                <strong>Película ID:</strong> {item.movie_id || "N/A"}
-                            </div>
-                            <div className="text-gray-400">
-                                {new Date(item.created_at).toLocaleString()}
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                    <button
+                        onClick={() => navigate("/")}
+                        className="px-5 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-600 transition-all font-bold text-sm"
+                    >← Home
+                    </button>
+                </div>
+
+                {loading ? (
+                    <p className="text-zinc-500">Cargando historial...</p>
+                ) : history.length === 0 ? (
+                    <p className="text-zinc-400 italic">No hay escaneos todavía.</p>
+                ) : (
+                    <ul className="space-y-6">
+                        {history.map(item => (
+                            <li
+                                key={item.id}
+                                className="flex gap-6 p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-black border border-zinc-800 hover:border-zinc-600 transition-all"
+                            >
+                                <div className="w-24 h-36 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
+                                    {item.poster ? (
+                                        <img
+                                            src={buildUrlImage(item.poster, "w185")}
+                                            alt={item.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">
+                                            Sin imagen
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold mb-1">
+                                        {item.title || "Película desconocida"}
+                                    </h3>
+
+                                    <p className="text-sm text-zinc-400 line-clamp-3 mb-3">
+                                        {item.overview || "Sin descripción disponible."}
+                                    </p>
+
+                                    <p className="text-xs text-zinc-500 uppercase tracking-wider">
+                                        Escaneado el{" "}
+                                        {new Date(item.created_at).toLocaleString()}
+                                    </p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }
